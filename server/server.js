@@ -48,6 +48,6 @@ const PORT = 5055; // Hardcoded to resolve conflicts
 console.log('DOTENV PORT (Ignored):', process.env.PORT);
 console.log('Using PORT:', PORT);
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+app.listen(5060, () => {
+    console.log(`Server running on port 5060`);
 });

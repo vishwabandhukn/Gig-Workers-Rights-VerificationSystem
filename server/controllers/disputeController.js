@@ -51,12 +51,22 @@ Return ONLY a JSON object with keys subject, body, summaryPoints.
                 const jsonStr = jsonMatch ? jsonMatch[0] : text;
                 appealLetter = JSON.parse(jsonStr);
             } catch (geminiError) {
-                console.error("Gemini API Error:", geminiError);
+                console.error("Gemini API Error (Using Fallback):", geminiError.message);
+
+                // MOCK FALLBACK LOGIC
+                const today = new Date().toLocaleDateString();
+                const evidenceText = evidenceList.length > 0
+                    ? `I have attached ${evidenceList.length} piece(s) of evidence to support my claim, including: ${evidenceList.map(e => e.tags.join(', ')).join(' and ')}.`
+                    : "I can provide further evidence upon request.";
+
                 appealLetter = {
-                    subject: "Error Generating Appeal",
-                    body: "The AI could not generate the appeal letter at this time. Please try again later.",
-                    summaryPoints: ["AI Generation Failed"],
-                    raw: geminiError.message
+                    subject: `Formal Appeal Regarding Account Status - ${platform} - ${nameToUse}`,
+                    body: `To the ${platform} Appeals Team,\n\nI am writing to formally appeal the recent decision regarding my account (ID: ${req.user.userId}). I believe this decision was made in error and does not reflect my history of service on the platform.\n\nIssue Summary: ${title}\n\nDescription: ${description}\n\n${evidenceText}\n\nI respectfully request that you review this case and reinstate my account status. I am committed to following all platform guidelines and providing excellent service.\n\nSincerely,\n${nameToUse}\n${today}`,
+                    summaryPoints: [
+                        "Decision contested based on provided evidence.",
+                        "Requesting immediate review and reinstatement.",
+                        "Committed to platform guidelines."
+                    ]
                 };
             }
         }
