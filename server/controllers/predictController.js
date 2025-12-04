@@ -12,10 +12,17 @@ exports.predictSuspension = async (req, res) => {
             return res.status(401).json({ message: 'User not authenticated properly' });
         }
         const { recentStats } = req.body;
-        // recentStats: { cancellations, acceptRate, avgRating, penalties, lastSuspensionDays }
+
+        if (!recentStats) {
+            console.error('Missing recentStats in body');
+            return res.status(400).json({ message: 'Missing recentStats' });
+        }
+
+        console.log('Gemini Key Present:', !!process.env.GEMINI_API_KEY);
+
+        console.log('Gemini Key Present:', !!process.env.GEMINI_API_KEY);
 
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
         const prompt = `
 SYSTEM:
 You are a gig-platform risk assessor. RETURN ONLY valid JSON: { "riskLevel":"low|medium|high", "score":0.00, "reasons":[...], "mitigation":[...] }.
@@ -25,10 +32,22 @@ Stats: ${JSON.stringify(recentStats)}
 Instruction: Evaluate suspension risk and return JSON only. Provide up to 3 reasons and 3 short mitigation tips.
     `;
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text = response.text();
-        console.log('Gemini Response:', text);
+        let text = '';
+        try {
+            const result = await model.generateContent(prompt);
+            const response = await result.response;
+            text = response.text();
+            console.log('Gemini Response:', text);
+        } catch (geminiError) {
+            console.error('Gemini API Error:', geminiError);
+            // Fallback if API fails
+            text = JSON.stringify({
+                riskLevel: "unknown",
+                score: 0,
+                reasons: ["AI Service Unavailable", geminiError.message],
+                mitigation: ["Please try again later"]
+            });
+        }
 
         let prediction;
         try {
@@ -41,30 +60,39 @@ Instruction: Evaluate suspension risk and return JSON only. Provide up to 3 reas
         }
 
         // Save Risk Assessment
-        const assessment = new RiskAssessment({
-            userId: req.user.userId,
-            stats: recentStats,
-            prediction
-        });
-        const savedAssessment = await assessment.save();
-        console.log('Saved Assessment:', savedAssessment);
+        try {
+            const assessment = new RiskAssessment({
+                userId: req.user.userId,
+                stats: recentStats,
+                prediction
+            });
+            const savedAssessment = await assessment.save();
+            console.log('Saved Assessment:', savedAssessment);
+        } catch (dbError) {
+            console.error('Database Save Error:', dbError);
+            // Continue to return prediction even if save fails, but log it
+        }
 
         // Create Anomaly if High Risk
         if (prediction.riskLevel === 'high') {
-            const anomaly = new Anomaly({
-                userId: req.user.userId,
-                type: 'suspension_risk',
-                details: { riskLevel: prediction.riskLevel, score: prediction.score },
-                score: prediction.score,
-                reasons: prediction.reasons
-            });
-            await anomaly.save();
-            console.log('Saved Anomaly');
+            try {
+                const anomaly = new Anomaly({
+                    userId: req.user.userId,
+                    type: 'suspension_risk',
+                    details: { riskLevel: prediction.riskLevel, score: prediction.score },
+                    score: prediction.score,
+                    reasons: prediction.reasons
+                });
+                await anomaly.save();
+                console.log('Saved Anomaly');
+            } catch (anomalyError) {
+                console.error('Anomaly Save Error:', anomalyError);
+            }
         }
 
         res.json(prediction);
     } catch (error) {
-        console.error('predictSuspension Error:', error);
+        console.error('predictSuspension Critical Error:', error);
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };

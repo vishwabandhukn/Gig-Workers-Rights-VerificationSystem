@@ -5,13 +5,15 @@ import toast from 'react-hot-toast';
 
 const RiskAssessment = () => {
     const [stats, setStats] = useState({
-        cancellations: 0,
-        acceptRate: 95,
-        avgRating: 4.8,
-        penalties: 0,
-        lastSuspensionDays: 365
+        cancellations: '',
+        acceptRate: '',
+        avgRating: '',
+        penalties: '',
+        lastSuspensionDays: ''
     });
     const [history, setHistory] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [prediction, setPrediction] = useState(null);
     const user = JSON.parse(localStorage.getItem('user') || '{}');
 
     const fetchHistory = async () => {
@@ -37,7 +39,13 @@ const RiskAssessment = () => {
         setLoading(true);
         try {
             const res = await api.post('/predict/suspension', {
-                recentStats: stats
+                recentStats: {
+                    cancellations: Number(stats.cancellations),
+                    acceptRate: Number(stats.acceptRate),
+                    avgRating: Number(stats.avgRating),
+                    penalties: Number(stats.penalties),
+                    lastSuspensionDays: Number(stats.lastSuspensionDays)
+                }
             });
             setPrediction(res.data);
             toast.success('Risk assessment completed!');
@@ -66,23 +74,23 @@ const RiskAssessment = () => {
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="form-control">
                                 <label className="label"><span className="label-text">Cancellations (Last 30 days)</span></label>
-                                <input type="number" className="input input-bordered" value={stats.cancellations} onChange={e => setStats({ ...stats, cancellations: Number(e.target.value) })} />
+                                <input type="number" placeholder="e.g. 2" className="input input-bordered" value={stats.cancellations} onChange={e => setStats({ ...stats, cancellations: e.target.value })} />
                             </div>
                             <div className="form-control">
                                 <label className="label"><span className="label-text">Acceptance Rate (%)</span></label>
-                                <input type="number" className="input input-bordered" value={stats.acceptRate} onChange={e => setStats({ ...stats, acceptRate: Number(e.target.value) })} />
+                                <input type="number" placeholder="e.g. 95" className="input input-bordered" value={stats.acceptRate} onChange={e => setStats({ ...stats, acceptRate: e.target.value })} />
                             </div>
                             <div className="form-control">
                                 <label className="label"><span className="label-text">Average Rating (0-5)</span></label>
-                                <input type="number" step="0.1" className="input input-bordered" value={stats.avgRating} onChange={e => setStats({ ...stats, avgRating: Number(e.target.value) })} />
+                                <input type="number" step="0.1" placeholder="e.g. 4.8" className="input input-bordered" value={stats.avgRating} onChange={e => setStats({ ...stats, avgRating: e.target.value })} />
                             </div>
                             <div className="form-control">
                                 <label className="label"><span className="label-text">Penalties (Last 30 days)</span></label>
-                                <input type="number" className="input input-bordered" value={stats.penalties} onChange={e => setStats({ ...stats, penalties: Number(e.target.value) })} />
+                                <input type="number" placeholder="e.g. 0" className="input input-bordered" value={stats.penalties} onChange={e => setStats({ ...stats, penalties: e.target.value })} />
                             </div>
                             <div className="form-control">
                                 <label className="label"><span className="label-text">Days Since Last Suspension</span></label>
-                                <input type="number" className="input input-bordered" value={stats.lastSuspensionDays} onChange={e => setStats({ ...stats, lastSuspensionDays: Number(e.target.value) })} />
+                                <input type="number" placeholder="e.g. 365" className="input input-bordered" value={stats.lastSuspensionDays} onChange={e => setStats({ ...stats, lastSuspensionDays: e.target.value })} />
                             </div>
                             <button className={`btn btn-primary ${loading ? 'loading' : ''}`} disabled={loading}>
                                 {loading ? 'Analyzing...' : 'Analyze Risk'}
