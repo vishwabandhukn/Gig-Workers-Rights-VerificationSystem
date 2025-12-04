@@ -44,7 +44,7 @@ app.get('/', (req, res) => {
 
 // Start Server
 // Start Server
-const PORT = 5050; // Hardcoded to resolve conflicts
+const PORT = 5055; // Hardcoded to resolve conflicts
 console.log('DOTENV PORT (Ignored):', process.env.PORT);
 console.log('Using PORT:', PORT);
 
