@@ -8,7 +8,7 @@ import Disputes from './pages/Disputes';
 import RiskAssessment from './pages/RiskAssessment';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Trips from './pages/Trips';
+// import Trips from './pages/Trips';
 import Ratings from './pages/Ratings';
 import Profile from './pages/Profile';
 
@@ -27,7 +27,7 @@ function App() {
                 <Route element={<ProtectedRoute />}>
                     <Route path="/" element={<Layout />}>
                         <Route index element={<Dashboard />} />
-                        <Route path="trips" element={<Trips />} />
+                        {/* <Route path="trips" element={<Trips />} /> */}
                         <Route path="ratings" element={<Ratings />} />
                         <Route path="profile" element={<Profile />} />
                         <Route path="evidence" element={<Evidence />} />

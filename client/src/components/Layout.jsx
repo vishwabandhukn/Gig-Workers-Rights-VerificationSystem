@@ -5,11 +5,12 @@ import Sidebar from './Sidebar';
 
 const Layout = () => {
     return (
-        <div className="flex h-screen bg-base-200 font-sans">
+        <div className="flex h-screen font-sans bg-transparent">
+            {/* Sidebar is fixed or flex item */}
             <Sidebar />
-            <div className="flex-1 flex flex-col overflow-hidden">
+            <div className="flex-1 flex flex-col overflow-hidden relative z-10">
                 <Navbar />
-                <main className="flex-1 overflow-x-hidden overflow-y-auto bg-base-200 p-6">
+                <main className="flex-1 overflow-x-hidden overflow-y-auto p-6 scroll-smooth">
                     <Outlet />
                 </main>
             </div>

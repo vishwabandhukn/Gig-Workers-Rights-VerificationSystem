@@ -11,7 +11,7 @@ exports.getMe = async (req, res) => {
             components: { payment: 90, suspension: 80, rating: 85, disputes: 85 }
         };
 
-        res.json({ user, fairnessSummary });
+        res.json({ ...user.toObject(), fairnessSummary });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
@@ -19,10 +19,15 @@ exports.getMe = async (req, res) => {
 
 exports.updateMe = async (req, res) => {
     try {
-        const { name, language } = req.body;
+        const { name, phone, language } = req.body;
+        const updates = {};
+        if (name) updates.name = name;
+        if (phone) updates.phone = phone;
+        if (language) updates.language = language;
+
         const user = await User.findByIdAndUpdate(
             req.user.userId,
-            { $set: { name, language } },
+            { $set: updates },
             { new: true }
         ).select('-passwordHash');
         res.json(user);

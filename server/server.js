@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
-app.use('/api/trips', require('./routes/tripRoutes'));
+// app.use('/api/trips', require('./routes/tripRoutes')); // Removed as file was deleted
 app.use('/api/blackbox', require('./routes/blackboxRoutes'));
 app.use('/api/payouts', require('./routes/payoutRoutes'));
 app.use('/api/fairness', require('./routes/fairnessRoutes'));
@@ -24,14 +24,11 @@ app.use('/api/platforms', require('./routes/platformRoutes'));
 app.use('/api/disputes', require('./routes/disputeRoutes'));
 app.use('/api/predict', require('./routes/predictRoutes'));
 app.use('/api/export', require('./routes/exportRoutes'));
+app.use('/api/upload', require('./routes/uploadRoutes'));
 
-
-
-
-
-
-
-
+// Serve Uploads Static Directory
+const path = require('path');
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Database Connection
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB Connected'))

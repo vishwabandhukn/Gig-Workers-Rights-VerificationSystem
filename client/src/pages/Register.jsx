@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
-
 import toast from 'react-hot-toast';
+import SplineBackground from '../components/SplineBackground';
+import { motion } from 'framer-motion';
+import { User, Phone, Lock, ArrowRight, Shield } from 'lucide-react';
 
 const Register = () => {
     const [formData, setFormData] = useState({ name: '', phone: '', password: '' });
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
             const res = await api.post('/auth/register', formData);
             localStorage.setItem('token', res.data.token);
@@ -20,39 +24,113 @@ const Register = () => {
             navigate('/');
         } catch (err) {
             toast.error('Registration failed. Please try again.');
+        } finally {
+            setLoading(false);
         }
     };
 
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+    };
+
+    const itemVariants = {
+        hidden: { y: 20, opacity: 0 },
+        visible: { y: 0, opacity: 1 }
+    };
+
     return (
-        <div className="hero min-h-screen bg-base-200">
-            <div className="hero-content flex-col lg:flex-row-reverse">
-                <div className="text-center lg:text-left">
-                    <h1 className="text-5xl font-bold">Register</h1>
-                    <p className="py-6">Join GigGuard today.</p>
-                </div>
-                <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-                    <form className="card-body" onSubmit={handleSubmit}>
+        <div className="relative min-h-screen text-white font-sans overflow-hidden flex items-center justify-center p-6">
+            {/* Darker Premium Gradient Background Layer */}
+            <div className="fixed inset-0 z-0 bg-[#2C5364] opacity-90"></div>
+            <div className="fixed inset-0 z-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 brightness-100 contrast-150 mix-blend-overlay"></div>
+
+            <div className="fixed inset-0 z-0 opacity-40 mix-blend-screen">
+                <SplineBackground />
+            </div>
+
+            <motion.div
+                className="relative z-10 w-full max-w-md"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+            >
+                <motion.div variants={itemVariants} className="text-center mb-8">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 shadow-lg shadow-emerald-500/30 mb-4">
+                        <Shield className="w-8 h-8 text-white" />
+                    </div>
+                    <h1 className="text-4xl font-bold text-white mb-2">Join GigGuard</h1>
+                    <p className="text-white/60">Protect your gig work today</p>
+                </motion.div>
+
+                <motion.div variants={itemVariants} className="glass-panel p-8 rounded-3xl border-white/10 bg-white/5 shadow-2xl backdrop-blur-xl">
+                    <form className="space-y-5" onSubmit={handleSubmit}>
                         <div className="form-control">
-                            <label className="label"><span className="label-text">Name</span></label>
-                            <input type="text" name="name" placeholder="Name" className="input input-bordered" onChange={handleChange} autoComplete="name" />
+                            <label className="label"><span className="label-text text-white/70">Full Name</span></label>
+                            <div className="relative">
+                                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
+                                <input
+                                    type="text"
+                                    name="name"
+                                    placeholder="Enter your name"
+                                    className="input pl-10 bg-white/5 border-white/10 text-white focus:border-emerald-500/50 focus:outline-none w-full transition-all hover:bg-white/10"
+                                    onChange={handleChange}
+                                    autoComplete="name"
+                                    required
+                                />
+                            </div>
                         </div>
                         <div className="form-control">
-                            <label className="label"><span className="label-text">Phone</span></label>
-                            <input type="text" name="phone" placeholder="Phone" className="input input-bordered" onChange={handleChange} autoComplete="tel" />
+                            <label className="label"><span className="label-text text-white/70">Phone Number</span></label>
+                            <div className="relative">
+                                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
+                                <input
+                                    type="text"
+                                    name="phone"
+                                    placeholder="Enter your phone"
+                                    className="input pl-10 bg-white/5 border-white/10 text-white focus:border-emerald-500/50 focus:outline-none w-full transition-all hover:bg-white/10"
+                                    onChange={handleChange}
+                                    autoComplete="tel"
+                                    required
+                                />
+                            </div>
                         </div>
                         <div className="form-control">
-                            <label className="label"><span className="label-text">Password</span></label>
-                            <input type="password" name="password" placeholder="Password" className="input input-bordered" onChange={handleChange} autoComplete="new-password" />
+                            <label className="label"><span className="label-text text-white/70">Password</span></label>
+                            <div className="relative">
+                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
+                                <input
+                                    type="password"
+                                    name="password"
+                                    placeholder="Create a password"
+                                    className="input pl-10 bg-white/5 border-white/10 text-white focus:border-emerald-500/50 focus:outline-none w-full transition-all hover:bg-white/10"
+                                    onChange={handleChange}
+                                    autoComplete="new-password"
+                                    required
+                                />
+                            </div>
                         </div>
                         <div className="form-control mt-6">
-                            <button className="btn btn-primary">Register</button>
+                            <button className={`btn bg-gradient-to-r from-emerald-500 to-teal-600 border-none text-white hover:from-emerald-600 hover:to-teal-700 shadow-lg shadow-emerald-900/20 h-12 text-lg ${loading ? 'loading' : ''}`} disabled={loading}>
+                                {loading ? 'Creating Account...' : (
+                                    <>
+                                        Register
+                                        <ArrowRight className="w-5 h-5 ml-2" />
+                                    </>
+                                )}
+                            </button>
                         </div>
-                        <div className="text-center mt-4">
-                            <Link to="/login" className="link link-hover">Already have an account? Login</Link>
+                        <div className="text-center mt-6">
+                            <p className="text-white/60 text-sm">
+                                Already have an account?{' '}
+                                <Link to="/login" className="link link-hover text-emerald-300 hover:text-emerald-200 font-medium">
+                                    Login here
+                                </Link>
+                            </p>
                         </div>
                     </form>
-                </div>
-            </div>
+                </motion.div>
+            </motion.div>
         </div>
     );
 };
