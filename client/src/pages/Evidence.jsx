@@ -64,7 +64,7 @@ const Evidence = () => {
     return (
         <div className="relative min-h-screen text-white font-sans overflow-hidden">
             {/* Darker Premium Gradient Background Layer */}
-            <div className="fixed inset-0 z-0 bg-[#2C5364] opacity-90"></div>
+            <div className="fixed inset-0 z-0 bg-[#2c3e50] opacity-90"></div>
             <div className="fixed inset-0 z-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 brightness-100 contrast-150 mix-blend-overlay"></div>
 
             <div className="fixed inset-0 z-0 opacity-40 mix-blend-screen">

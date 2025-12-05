@@ -102,7 +102,7 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="relative min-h-screen text-white font-sans overflow-hidden">
+        <div className="relative min-h-screen text-white font-sans overflow-x-hidden">
             {/* Darker Premium Gradient Background Layer */}
             <div className="fixed inset-0 z-0 bg-[#2C5364] opacity-90"></div>
             <div className="fixed inset-0 z-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 brightness-100 contrast-150 mix-blend-overlay"></div>
@@ -125,25 +125,20 @@ const Dashboard = () => {
                         </h1>
                         <p className="text-xl text-white mt-2 font-medium">Here's your fairness overview.</p>
                     </div>
-                    <div className="hidden md:block">
-                        <div className="glass-panel px-4 py-2 rounded-full flex items-center gap-2 text-sm font-medium text-white">
-                            <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
-                            System Operational
-                        </div>
-                    </div>
+
                 </motion.header>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     {/* Quick Actions Section */}
-                    <motion.div variants={itemVariants} className="space-y-6">
+                    <motion.div variants={itemVariants} className="space-y-6 bg-[#2c3e50] p-6 rounded-3xl">
                         <h2 className="text-2xl font-bold flex items-center gap-3 text-white">
                             <div className="p-2 rounded-lg bg-emerald-500/20 backdrop-blur-md">
                                 <Activity className="w-6 h-6 text-emerald-300" />
                             </div>
                             Quick Actions
                         </h2>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-[350px] overflow-y-auto custom-scrollbar pr-2 content-start">
-                            <Link to="/evidence" className="glass-card p-6 rounded-3xl flex flex-col items-center text-center group border-white/20 bg-[#2c3e50] hover:bg-[#34495e] h-full">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 content-start">
+                            <Link to="/evidence" className="glass-card p-6 rounded-3xl flex flex-col items-center text-center group border-white/20 bg-white/10 hover:bg-white/20 h-full">
                                 <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-400/20 to-blue-600/20 mb-4 group-hover:scale-110 transition-transform duration-300 shadow-inner border border-white/10">
                                     <FileText className="w-8 h-8 text-blue-200" />
                                 </div>
@@ -151,7 +146,7 @@ const Dashboard = () => {
                                 <p className="text-sm text-white font-medium">Securely upload & manage evidence</p>
                             </Link>
 
-                            <Link to="/payouts" className="glass-card p-6 rounded-3xl flex flex-col items-center text-center group border-white/20 bg-[#2c3e50] hover:bg-[#34495e] h-full">
+                            <Link to="/payouts" className="glass-card p-6 rounded-3xl flex flex-col items-center text-center group border-white/20 bg-white/10 hover:bg-white/20 h-full">
                                 <div className="p-4 rounded-2xl bg-gradient-to-br from-emerald-400/20 to-emerald-600/20 mb-4 group-hover:scale-110 transition-transform duration-300 shadow-inner border border-white/10">
                                     <DollarSign className="w-8 h-8 text-emerald-200" />
                                 </div>
@@ -159,7 +154,7 @@ const Dashboard = () => {
                                 <p className="text-sm text-white font-medium">Check for payment discrepancies</p>
                             </Link>
 
-                            <Link to="/ratings" className="glass-card p-6 rounded-3xl flex flex-col items-center text-center group sm:col-span-2 border-white/20 bg-[#2c3e50] hover:bg-[#34495e] h-full">
+                            <Link to="/ratings" className="glass-card p-6 rounded-3xl flex flex-col items-center text-center group sm:col-span-2 border-white/20 bg-white/10 hover:bg-white/20 h-full">
                                 <div className="p-4 rounded-2xl bg-gradient-to-br from-amber-400/20 to-amber-600/20 mb-4 group-hover:scale-110 transition-transform duration-300 shadow-inner border border-white/10">
                                     <Star className="w-8 h-8 text-amber-200" />
                                 </div>
@@ -170,7 +165,7 @@ const Dashboard = () => {
                     </motion.div>
 
                     {/* Risk & Disputes Section */}
-                    <motion.div variants={itemVariants} className="space-y-6">
+                    <motion.div variants={itemVariants} className="space-y-6 bg-[#2c3e50] p-6 rounded-3xl">
                         <h2 className="text-2xl font-bold flex items-center gap-3 text-white">
                             <div className="p-2 rounded-lg bg-rose-500/20 backdrop-blur-md">
                                 <Shield className="w-6 h-6 text-rose-300" />
@@ -178,7 +173,7 @@ const Dashboard = () => {
                             Risk & Disputes
                         </h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-[350px] overflow-y-auto custom-scrollbar pr-2 content-start">
-                            <Link to="/disputes" className="glass-card p-6 rounded-3xl flex flex-col items-center text-center group border-white/20 bg-[#2c3e50] hover:bg-[#34495e] h-full">
+                            <Link to="/disputes" className="glass-card p-6 rounded-3xl flex flex-col items-center text-center group border-white/20 bg-white/10 hover:bg-white/20 h-full">
                                 <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-400/20 to-purple-600/20 mb-4 group-hover:scale-110 transition-transform duration-300 shadow-inner border border-white/10">
                                     <FileText className="w-8 h-8 text-purple-200" />
                                 </div>
@@ -186,7 +181,7 @@ const Dashboard = () => {
                                 <p className="text-sm text-white font-medium">Generate appeals & manage cases</p>
                             </Link>
 
-                            <Link to="/risk" className="glass-card p-6 rounded-3xl flex flex-col items-center text-center group border-white/20 bg-[#2c3e50] hover:bg-[#34495e] h-full">
+                            <Link to="/risk" className="glass-card p-6 rounded-3xl flex flex-col items-center text-center group border-white/20 bg-white/10 hover:bg-white/20 h-full">
                                 <div className="p-4 rounded-2xl bg-gradient-to-br from-rose-400/20 to-rose-600/20 mb-4 group-hover:scale-110 transition-transform duration-300 shadow-inner border border-white/10">
                                     <AlertTriangle className="w-8 h-8 text-rose-200" />
                                 </div>

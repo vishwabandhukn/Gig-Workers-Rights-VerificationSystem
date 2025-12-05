@@ -29,10 +29,9 @@ exports.getFairnessScore = async (req, res) => {
             if (suspensionScore < 0) suspensionScore = 0;
         }
 
-        // 3. Rating Component (20%)
-        // Average of user's ratings for platforms
+        
         const ratings = await PlatformRating.find({ userId });
-        let ratingScore = 100; // Default if no ratings
+        let ratingScore = 100;  
         if (ratings.length > 0) {
             let totalSum = 0;
             let count = 0;
@@ -40,21 +39,19 @@ exports.getFairnessScore = async (req, res) => {
                 totalSum += (r.ratings.payment + r.ratings.suspension + r.ratings.support) / 3; // Avg of 3 fields (1-10)
                 count++;
             });
-            // Normalize 1-10 to 0-100
+              
             const avgRating = totalSum / count;
             ratingScore = avgRating * 10;
         }
 
-        // 4. Disputes Component (15%)
+         
         const disputes = await Dispute.find({ userId });
         const totalDisputes = disputes.length;
         const resolvedDisputes = disputes.filter(d => d.status === 'resolved').length;
-        // If no disputes, score is 100. If disputes exist, ratio of resolved.
-        // But having disputes itself might lower score? 
-        // Let's stick to "Resolution Rate".
+        
         let disputesScore = totalDisputes === 0 ? 100 : (resolvedDisputes / totalDisputes) * 100;
 
-        // Weights
+         
         const finalScore = Math.round(
             (paymentScore * 0.4) +
             (suspensionScore * 0.25) +
